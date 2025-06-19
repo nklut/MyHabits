@@ -30,7 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // Tab bar Controller Setup
         let tabBarController = UITabBarController()
-        tabBarController.tabBar.backgroundColor = .mhGrey
+        tabBarController.tabBar.backgroundColor = .mhGray
         tabBarController.tabBar.tintColor = .mhPurple
         tabBarController.viewControllers = [habitsNavigationController, infoNavigationController]
            
