@@ -76,6 +76,8 @@ class HabitCreateEditView: UIViewController {
     private lazy var habitColorPreviewImage: UIImageView = {
         let view = UIImageView()
         
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 20
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .mhOrange
         let tapRoot = UITapGestureRecognizer(
@@ -105,7 +107,7 @@ class HabitCreateEditView: UIViewController {
         
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
-        view.text = "Every day at: "
+        view.text = "Every day at"
         
         return view
         
@@ -169,6 +171,7 @@ class HabitCreateEditView: UIViewController {
         contentView.addSubview(habitTextField)
         contentView.addSubview(habitColorLabelView)
         contentView.addSubview(habitColorPreviewImage)
+        contentView.addSubview(habitTimeLabel)
         contentView.addSubview(habitTimeSetLabel)
         contentView.addSubview(habitTimeSet)
     }
@@ -192,30 +195,36 @@ class HabitCreateEditView: UIViewController {
             habitLabelView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             habitLabelView.heightAnchor.constraint(equalToConstant: 20),
             
-            habitTextField.topAnchor.constraint(equalTo: habitLabelView.topAnchor, constant: 20),
+            habitTextField.topAnchor.constraint(equalTo: habitLabelView.bottomAnchor, constant: 10),
             habitTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 10),
             habitTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             habitTextField.heightAnchor.constraint(equalToConstant: 20),
             
-            habitColorLabelView.topAnchor.constraint(equalTo: habitTextField.topAnchor, constant: 20),
+            habitColorLabelView.topAnchor.constraint(equalTo: habitTextField.bottomAnchor, constant: 30),
             habitColorLabelView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 10),
             habitColorLabelView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             habitColorLabelView.heightAnchor.constraint(equalToConstant: 20),
             
-            habitColorPreviewImage.topAnchor.constraint(equalTo: habitColorLabelView.topAnchor, constant: 20),
+            habitColorPreviewImage.topAnchor.constraint(equalTo: habitColorLabelView.bottomAnchor, constant: 10),
             habitColorPreviewImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 10),
-            habitColorPreviewImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            habitColorPreviewImage.heightAnchor.constraint(equalToConstant: 20),
+            habitColorPreviewImage.heightAnchor.constraint(equalToConstant: 40),
+            habitColorPreviewImage.widthAnchor.constraint(equalToConstant: 40),
             
-            habitTimeSetLabel.topAnchor.constraint(equalTo: habitColorPreviewImage.topAnchor, constant: 20),
+            habitTimeLabel.topAnchor.constraint(equalTo: habitColorPreviewImage.bottomAnchor, constant: 30),
+            habitTimeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 10),
+            habitTimeLabel.heightAnchor.constraint(equalToConstant: 20),
+            habitTimeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            
+            habitTimeSetLabel.topAnchor.constraint(equalTo: habitTimeLabel.bottomAnchor, constant: 10),
             habitTimeSetLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 10),
-            habitTimeSetLabel.trailingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 200),
-            habitTimeSetLabel.heightAnchor.constraint(equalToConstant: 20),
+            habitTimeSetLabel.widthAnchor.constraint(equalToConstant: 100),
+          //  habitTimeSetLabel.heightAnchor.constraint(equalToConstant: 40),
+            habitTimeSetLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
             
-            habitTimeSet.topAnchor.constraint(equalTo: habitColorPreviewImage.topAnchor, constant: 20),
-            habitTimeSet.leadingAnchor.constraint(equalTo: habitTimeSetLabel.trailingAnchor, constant: 0),
-            habitTimeSet.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            habitTimeSet.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            habitTimeSet.heightAnchor.constraint(equalToConstant: 30),
+            habitTimeSet.leadingAnchor.constraint(equalTo: habitTimeSetLabel.trailingAnchor, constant: -10),
+            habitTimeSet.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
+            habitTimeSet.bottomAnchor.constraint(equalTo: habitTimeSetLabel.bottomAnchor),
         ])
     }
     
