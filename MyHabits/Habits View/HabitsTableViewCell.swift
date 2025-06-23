@@ -33,6 +33,10 @@ class HabitsTableViewCell: UITableViewCell {
         lazy var taskLabel: UILabel = {
             let view = UILabel()
             view.translatesAutoresizingMaskIntoConstraints = false
+            
+            view.lineBreakMode = .byWordWrapping
+            view.numberOfLines = 0
+            
             view.text = habitItem.habitLabel
             view.textColor = habitItem.HabitColor
             view.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
@@ -43,6 +47,7 @@ class HabitsTableViewCell: UITableViewCell {
         lazy var taskDescription: UILabel = {
             let view = UILabel()
             view.translatesAutoresizingMaskIntoConstraints = false
+            
             view.text = habitItem.habitDescription
             view.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.regular)
             view.textColor = .systemGray2
@@ -53,6 +58,7 @@ class HabitsTableViewCell: UITableViewCell {
         lazy var taskCounter: UILabel = {
             let view = UILabel()
             view.translatesAutoresizingMaskIntoConstraints = false
+            
             view.text = habitItem.habitCounter
             view.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.semibold)
             view.textColor = .systemGray2
@@ -63,21 +69,34 @@ class HabitsTableViewCell: UITableViewCell {
         lazy var taskCheckBox: UIButton = {
             let view = UIButton(type: .custom)
             view.translatesAutoresizingMaskIntoConstraints = false
-            view.backgroundColor = habitItem.HabitColor
-            view.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
+            view.backgroundColor = .systemBackground
+            view.clipsToBounds = true
+            
+            let uncheckedImage = UIImage(systemName: "circle")?.withTintColor(habitItem.HabitColor, renderingMode: .alwaysOriginal)
+            let checkedImage = UIImage(systemName: "checkmark.circle")?.withTintColor(habitItem.HabitColor, renderingMode: .alwaysOriginal)
+
+            view.setImage(uncheckedImage, for: .normal)
+            
+            if isSelected {
+                view.setImage(uncheckedImage, for: .selected)
+            } else {
+                view.setImage(checkedImage, for: .selected)
+            }
+            
+            view.addTarget(self, action: #selector(isBoxChecked), for: .touchUpInside)
             
             return view
         }()
-        
+
         lazy var habitViewContainer: UIView = {
             let view = UIView()
             view.translatesAutoresizingMaskIntoConstraints = false
+            
             view.backgroundColor = .white
             view.layer.cornerRadius = 20
 
             return view
         }()
-        
         
         // Add post subviews to Cell content view
         func addSubviews() {
@@ -101,7 +120,7 @@ class HabitsTableViewCell: UITableViewCell {
                 
                 taskLabel.topAnchor.constraint(equalTo: habitViewContainer.topAnchor, constant: 20),
                 taskLabel.leadingAnchor.constraint(equalTo: habitViewContainer.leadingAnchor, constant: 10),
-                taskLabel.heightAnchor.constraint(equalToConstant: 20),
+                taskLabel.heightAnchor.constraint(equalToConstant: 50),
                 taskLabel.trailingAnchor.constraint(equalTo: habitViewContainer.trailingAnchor, constant: -90),
                 
                 taskDescription.topAnchor.constraint(equalTo: taskLabel.bottomAnchor, constant: 5),
@@ -126,4 +145,11 @@ class HabitsTableViewCell: UITableViewCell {
         setupConstraints()
     }
     
+    @objc func isBoxChecked(sender: UIButton) {
+        if sender.isSelected {
+            sender.isSelected.toggle()
+        } else {
+            sender.isSelected.toggle()
+        }
+    }
 }

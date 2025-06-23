@@ -2,7 +2,21 @@ import UIKit
 
 class HabitsViewController: UIViewController {
     
-    private lazy var habitsList: [habitListItem] = habitListItem.make()
+    // private lazy var habitsList: [habitListItem] = habitListItem.make()
+    
+    private lazy var addHabitButton: UIButton = {
+        let view = UIButton(type: .custom)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.backgroundColor = .systemBackground
+        view.setImage(UIImage(systemName: "plus"), for: .normal)
+        view.tintColor = .mhPurple
+        
+        view.addTarget(self, action: #selector(didAddHabit), for: .touchUpInside)
+        
+        return view
+        
+    }()
     
     private lazy var habitsTableView: UITableView = {
         let view = UITableView.init(
@@ -46,6 +60,7 @@ class HabitsViewController: UIViewController {
     }
     
     private func addSubviews() {
+        view.addSubview(addHabitButton)
         view.addSubview(habitsTableView)
     }
     
@@ -53,11 +68,16 @@ class HabitsViewController: UIViewController {
         let safeArea = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            habitsTableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            
+            addHabitButton.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            addHabitButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
+            addHabitButton.heightAnchor.constraint(equalToConstant: 22),
+            addHabitButton.widthAnchor.constraint(equalToConstant: 18),
+            
+            habitsTableView.topAnchor.constraint(equalTo: addHabitButton.bottomAnchor),
             habitsTableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
             habitsTableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             habitsTableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
-            
         ])
     }
     
@@ -82,7 +102,24 @@ class HabitsViewController: UIViewController {
         // Init behaviour
         habitsTableView.dataSource = self
         habitsTableView.delegate = self
-    }    
+    }
+    
+    @objc private func didAddHabit() {
+        
+        print("habitsList1: ", habitsList)
+        lazy var updatedList: [habitListItem] = habitListItem.addHabit(
+            item: habitListItem(
+                habitLabel: "Habit 6",
+                habitDescription: "Habit 6 description",
+                habitCounter: "Habit 6: 3",
+                HabitColor: .mhViolet),
+            list: habitsList)
+        habitsList = updatedList
+
+        self.navigationController?.pushViewController(HabitsViewController(), animated: true)
+        print("habitsList2: ", habitsList)
+        print("Habit added")
+        }
 }
 
 extension HabitsViewController: UITableViewDataSource {
@@ -178,7 +215,7 @@ extension HabitsViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
-        150
+        200
         //return UITableView.automaticDimension
         
 //        if indexPath.section == 0 {

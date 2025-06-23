@@ -11,7 +11,7 @@ extension habitListItem {
     static func make() -> [habitListItem] {
         [
             habitListItem(
-                habitLabel: "Habit 1",
+                habitLabel: "Habit 1 Check This Line is long enough to cover 3 lines of text horrayh",
                 habitDescription: "Habit 1 description",
                 habitCounter: "Habit 1: 3",
                 HabitColor: .mhBlue),
@@ -37,7 +37,14 @@ extension habitListItem {
                 HabitColor: .mhViolet),
         ]
     }
+    static func addHabit(item: habitListItem, list: [habitListItem]) -> [habitListItem] {
+        print("New habit item: ", item)
+        var newList: [habitListItem] = list
+        newList.append(item)
+        print("New habit List: ", newList)
+        return newList
+    }
 }
 
-
+var habitsList: [habitListItem] = habitListItem.make()
 

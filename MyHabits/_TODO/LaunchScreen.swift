@@ -1,3 +1,9 @@
+
+// MARK: - TODO
+// CLIP TO BOUNDS
+// IMAGE corner radius
+
+
 import UIKit
 
 class LaunchScreen: UIViewController {
