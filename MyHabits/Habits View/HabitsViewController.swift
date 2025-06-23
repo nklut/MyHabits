@@ -8,7 +8,7 @@ class HabitsViewController: UIViewController {
         let view = UIButton(type: .custom)
         view.translatesAutoresizingMaskIntoConstraints = false
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .systemGray5
         view.setImage(UIImage(systemName: "plus"), for: .normal)
         view.tintColor = .mhPurple
         
@@ -24,7 +24,7 @@ class HabitsViewController: UIViewController {
             style: .plain
         )
         view.separatorStyle = .none
-        view.backgroundColor = .systemGray6
+        view.backgroundColor = .systemGray5
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -40,7 +40,7 @@ class HabitsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.navigationController?.navigationBar.isHidden = true
         setupView()
         addSubviews()
         setupSubviews()
@@ -56,7 +56,7 @@ class HabitsViewController: UIViewController {
     }
     
     private func setupView() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .systemGray5
     }
     
     private func addSubviews() {
@@ -105,21 +105,9 @@ class HabitsViewController: UIViewController {
     }
     
     @objc private func didAddHabit() {
-        
-        print("habitsList1: ", habitsList)
-        lazy var updatedList: [habitListItem] = habitListItem.addHabit(
-            item: habitListItem(
-                habitLabel: "Habit 6",
-                habitDescription: "Habit 6 description",
-                habitCounter: "Habit 6: 3",
-                HabitColor: .mhViolet),
-            list: habitsList)
-        habitsList = updatedList
-
-        self.navigationController?.pushViewController(HabitsViewController(), animated: true)
-        print("habitsList2: ", habitsList)
-        print("Habit added")
-        }
+        self.navigationController?.pushViewController(HabitCreateEditView(status: .create), animated: true)
+        self.navigationController?.navigationBar.isHidden = false
+    }
 }
 
 extension HabitsViewController: UITableViewDataSource {

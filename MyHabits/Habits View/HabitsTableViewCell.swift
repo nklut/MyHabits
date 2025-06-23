@@ -90,8 +90,8 @@ class HabitsTableViewCell: UITableViewCell {
 
         lazy var habitViewContainer: UIView = {
             let view = UIView()
-            view.translatesAutoresizingMaskIntoConstraints = false
             
+            view.translatesAutoresizingMaskIntoConstraints = false
             view.backgroundColor = .white
             view.layer.cornerRadius = 20
 

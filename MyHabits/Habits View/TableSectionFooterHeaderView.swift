@@ -10,6 +10,7 @@ class TableSectionFooterHeaderView: UITableViewHeaderFooterView {
         view.text = "Today"
         // MARK: ---------------------
         
+        view.backgroundColor = .systemGray5
         view.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
         view.textColor = .black
         
@@ -18,7 +19,7 @@ class TableSectionFooterHeaderView: UITableViewHeaderFooterView {
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = .systemBackground
+        contentView.backgroundColor = .systemGray5
         addSubviews()
         setupView()
     }
