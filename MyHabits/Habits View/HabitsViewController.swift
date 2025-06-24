@@ -130,12 +130,7 @@ extension HabitsViewController: UITableViewDataSource {
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-         
-        if section == 1 {
-            return habitsList.count
-        } else {
-            return 1
-        }
+        return section == 1 ? habitsList.count : 1
     }
 
     // Add post to cell according to index(Path)
@@ -143,17 +138,6 @@ extension HabitsViewController: UITableViewDataSource {
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: CellReuseID.habit.rawValue,
-            for: indexPath
-        ) as? HabitsTableViewCell else {
-            fatalError("could not dequeueReusableCell")
-        }
-    
-        cell.update(habitsList[indexPath.row])
-        return cell
-        
-
         if indexPath.section == 1
         {
             guard let cell = tableView.dequeueReusableCell(
@@ -187,7 +171,7 @@ extension HabitsViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForHeaderInSection section: Int
     ) -> CGFloat {
-        return UITableView.automaticDimension
+        return section == 1 ? 5 : UITableView.automaticDimension
     }
     
     func tableView(
@@ -201,20 +185,12 @@ extension HabitsViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
-        200
-        //return UITableView.automaticDimension
-        
-//        if indexPath.section == 0 {
-//            return UITableView.automaticDimension
-//        }
-//        else {
-//            return UITableView.automaticDimension
-//        }
+        return indexPath.section == 1 ? 150 : UITableView.automaticDimension
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            navigationController?.pushViewController(HabitCreateEditView(status: .edit), animated: true)
+        if indexPath.section == 1 {
+            navigationController?.pushViewController(HabitDetailsViewController(), animated: true)
             navigationController?.navigationBar.isHidden = false
         }
     }
@@ -223,25 +199,17 @@ extension HabitsViewController: UITableViewDelegate {
         _ tableView: UITableView,
         viewForHeaderInSection section: Int
     ) -> UIView? {
-        
-        guard let headerView = tableView.dequeueReusableHeaderFooterView(
-            withIdentifier: HeaderFooterReuseID.base.rawValue
-        ) as? HabitsTableSectionFooterHeaderView else {
-            fatalError("could not dequeueReusableCell")
-        }
-        return headerView
-    
-
-        if section == 0 {
+        if section == 1 {
+            let headerForSecondSection = UIView()
+            headerForSecondSection.backgroundColor = .mhGray
+            return headerForSecondSection
+        } else {
             guard let headerView = tableView.dequeueReusableHeaderFooterView(
                 withIdentifier: HeaderFooterReuseID.base.rawValue
             ) as? HabitsTableSectionFooterHeaderView else {
                 fatalError("could not dequeueReusableCell")
             }
             return headerView
-        
-        } else {
-            return UIView()
         }
     
     }
@@ -249,9 +217,6 @@ extension HabitsViewController: UITableViewDelegate {
         _ tableView: UITableView,
         viewForFooterInSection section: Int
     ) -> UIView? {
-        //let footerView = UIView()
-        //footerView.tintColor = .mhOrange
-        //return footerView
         return UIView()
     }
 }

@@ -28,12 +28,14 @@ class HabitsTableViewCell: UITableViewCell {
     
     func update(_ habitItem: habitListItem) {
         
+        
+        
         lazy var taskLabel: UILabel = {
             let view = UILabel()
             view.translatesAutoresizingMaskIntoConstraints = false
             
             view.lineBreakMode = .byWordWrapping
-            view.numberOfLines = 0
+            view.numberOfLines = 2
             
             view.text = habitItem.habitLabel
             view.textColor = habitItem.HabitColor
@@ -91,7 +93,7 @@ class HabitsTableViewCell: UITableViewCell {
             
             view.translatesAutoresizingMaskIntoConstraints = false
             view.backgroundColor = .white
-            view.layer.cornerRadius = 20
+            view.layer.cornerRadius = 10
 
             return view
         }()
@@ -118,7 +120,6 @@ class HabitsTableViewCell: UITableViewCell {
                 
                 taskLabel.topAnchor.constraint(equalTo: habitViewContainer.topAnchor, constant: 20),
                 taskLabel.leadingAnchor.constraint(equalTo: habitViewContainer.leadingAnchor, constant: 10),
-                taskLabel.heightAnchor.constraint(equalToConstant: 50),
                 taskLabel.trailingAnchor.constraint(equalTo: habitViewContainer.trailingAnchor, constant: -90),
                 
                 taskDescription.topAnchor.constraint(equalTo: taskLabel.bottomAnchor, constant: 5),

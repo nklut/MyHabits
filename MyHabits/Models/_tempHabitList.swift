@@ -7,6 +7,10 @@ struct habitListItem {
     let HabitColor: UIColor
 }
 
+struct dateSinceInstall {
+    let currentDate: Date
+}
+
 extension habitListItem {
     static func make() -> [habitListItem] {
         [
@@ -48,3 +52,11 @@ extension habitListItem {
 
 var habitsList: [habitListItem] = habitListItem.make()
 
+//var habitsAllDates: [Date] = HabitsStore.shared.dates
+
+var habitsAllDates: [Date] = [
+    Date.now,
+    Calendar.current.date(byAdding: .day, value: 1, to: Date.now)!,
+    Calendar.current.date(byAdding: .day, value: 2, to: Date.now)!,
+    Calendar.current.date(byAdding: .day, value: 3, to: Date.now)!,
+]

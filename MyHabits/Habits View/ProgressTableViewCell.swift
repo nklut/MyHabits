@@ -31,6 +31,8 @@ class ProgressTableViewCell: UITableViewCell {
         lazy var progressLabelView: UILabel = {
             let view = UILabel()
             
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.backgroundColor = .white
             view.text = "You got this!"
             view.textColor = .systemGray2
             view.font = UIFont.systemFont(ofSize: 13, weight: .regular)
@@ -41,7 +43,8 @@ class ProgressTableViewCell: UITableViewCell {
         lazy var progressPercentView: UILabel = {
             let view = UILabel()
             
-            view.text = "You got this!"
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.text = "50%"
             // view.text = habit_done_count_today / habit_total_count_today * 100 + "%"
             view.textColor = .systemGray2
             view.font = UIFont.systemFont(ofSize: 13, weight: .regular)
@@ -51,28 +54,31 @@ class ProgressTableViewCell: UITableViewCell {
         lazy var progressBarView: UIProgressView = {
             let view = UIProgressView()
             
-            view.progressTintColor = .mhViolet
-            view.progressViewStyle = .bar
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.progressTintColor = .mhPurple
+            view.progressViewStyle = .default
             view.trackTintColor = .systemGray5
+            
+            view.progress = 0.5 // habit_done_count_today / habit_total_count_today
             
             return view
         }()
         
-        lazy var habitViewContainer: UIView = {
+        lazy var progressViewContainer: UIView = {
             let view = UIView()
             
             view.translatesAutoresizingMaskIntoConstraints = false
             view.backgroundColor = .white
-            view.layer.cornerRadius = 20
+            view.layer.cornerRadius = 10
 
             return view
         }()
         
         func addSubviews() {
-            contentView.addSubview(habitViewContainer)
-            habitViewContainer.addSubview(progressLabelView)
-            habitViewContainer.addSubview(progressPercentView)
-            habitViewContainer.addSubview(progressBarView)
+            contentView.addSubview(progressViewContainer)
+            progressViewContainer.addSubview(progressLabelView)
+            progressViewContainer.addSubview(progressPercentView)
+            progressViewContainer.addSubview(progressBarView)
  
         }
         
@@ -80,31 +86,32 @@ class ProgressTableViewCell: UITableViewCell {
         func setupConstraints() {
             
             let safeArea = contentView.safeAreaLayoutGuide
+            
             NSLayoutConstraint.activate([
                 
-                habitViewContainer.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
-                habitViewContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-                habitViewContainer.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -10),
-                habitViewContainer.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
+                progressViewContainer.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 25),
+                progressViewContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+                progressViewContainer.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -10),
+                progressViewContainer.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
                 
-                progressLabelView.topAnchor.constraint(equalTo: habitViewContainer.topAnchor, constant: 10),
-                progressLabelView.leadingAnchor.constraint(equalTo: habitViewContainer.leadingAnchor, constant: 10),
+                progressLabelView.topAnchor.constraint(equalTo: progressViewContainer.topAnchor, constant: 10),
+                progressLabelView.leadingAnchor.constraint(equalTo: progressViewContainer.leadingAnchor, constant: 10),
                 progressLabelView.heightAnchor.constraint(equalToConstant: 20),
-                progressLabelView.trailingAnchor.constraint(equalTo: habitViewContainer.trailingAnchor, constant: -150),
+                progressLabelView.trailingAnchor.constraint(equalTo: progressViewContainer.trailingAnchor, constant: -150),
                 
                 progressPercentView.topAnchor.constraint(equalTo: progressLabelView.topAnchor),
-                progressPercentView.widthAnchor.constraint(equalToConstant: 100),
                 progressPercentView.heightAnchor.constraint(equalToConstant: 20),
-                progressPercentView.trailingAnchor.constraint(equalTo: habitViewContainer.trailingAnchor, constant: -10),
+                progressPercentView.trailingAnchor.constraint(equalTo: progressViewContainer.trailingAnchor, constant: -10),
                 
                 progressBarView.topAnchor.constraint(equalTo: progressLabelView.bottomAnchor, constant: 10),
                 progressBarView.leadingAnchor.constraint(equalTo: progressLabelView.leadingAnchor),
                 progressBarView.heightAnchor.constraint(equalToConstant: 10),
+                progressBarView.bottomAnchor.constraint(equalTo: progressViewContainer.bottomAnchor, constant: -10),
                 progressBarView.trailingAnchor.constraint(equalTo: progressPercentView.trailingAnchor),
             ])
         }
         
-        contentView.backgroundColor = .red
+        contentView.backgroundColor = .mhGray
         addSubviews()
         setupConstraints()
         
