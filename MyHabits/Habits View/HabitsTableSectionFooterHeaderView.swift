@@ -1,6 +1,6 @@
 import UIKit
 
-class TableSectionFooterHeaderView: UITableViewHeaderFooterView {
+class HabitsTableSectionFooterHeaderView: UITableViewHeaderFooterView {
     
     private lazy var headerTitle: UILabel = {
         let view = UILabel()

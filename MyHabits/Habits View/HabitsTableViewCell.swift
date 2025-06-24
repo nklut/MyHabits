@@ -2,8 +2,6 @@ import UIKit
 
 class HabitsTableViewCell: UITableViewCell {
     
-    fileprivate lazy var habitsList: [habitListItem] = habitListItem.make()
-    
     override init(
         style: UITableViewCell.CellStyle,
         reuseIdentifier: String?

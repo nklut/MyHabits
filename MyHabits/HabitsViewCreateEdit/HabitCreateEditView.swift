@@ -35,6 +35,20 @@ class HabitCreateEditView: UIViewController {
         return view
     }()
     
+    private lazy var deleteHabitButton: UIButton = {
+        let view = UIButton(type: .roundedRect)
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setTitle("Delete habit", for: .normal)
+        view.tintColor = .red
+        view.setTitleColor(.red, for: .normal)
+        view.backgroundColor = .white
+        
+        view.addTarget(self, action: #selector(didPressDeleteButton), for: .touchUpInside)
+        
+        return view
+    }()
+    
     private lazy var habitLabelView: UILabel = {
         let view = UILabel()
         
@@ -160,7 +174,12 @@ class HabitCreateEditView: UIViewController {
         
         view.backgroundColor = .systemGray5        
         addSubviews()
-        setupView()
+        if status == .create {
+            setupCreateView()
+        } else {
+            setupEditView()
+        }
+        
     }
     
     private func addSubviews() {
@@ -174,10 +193,16 @@ class HabitCreateEditView: UIViewController {
         contentView.addSubview(habitTimeLabel)
         contentView.addSubview(habitTimeSetLabel)
         contentView.addSubview(habitTimeSet)
+        
+        if status == .edit {
+            view.addSubview(deleteHabitButton)
+        }
+        
     }
     
-    private func setupView() {
+    private func setupEditView() {
         let safeArea = view.safeAreaLayoutGuide
+        
         NSLayoutConstraint.activate([
             
             habitScrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
@@ -218,7 +243,62 @@ class HabitCreateEditView: UIViewController {
             habitTimeSetLabel.topAnchor.constraint(equalTo: habitTimeLabel.bottomAnchor, constant: 10),
             habitTimeSetLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 10),
             habitTimeSetLabel.widthAnchor.constraint(equalToConstant: 100),
-          //  habitTimeSetLabel.heightAnchor.constraint(equalToConstant: 40),
+            habitTimeSetLabel.heightAnchor.constraint(equalToConstant: 30),
+            
+            habitTimeSet.heightAnchor.constraint(equalToConstant: 30),
+            habitTimeSet.leadingAnchor.constraint(equalTo: habitTimeSetLabel.trailingAnchor, constant: -10),
+            habitTimeSet.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
+            habitTimeSet.bottomAnchor.constraint(equalTo: habitTimeSetLabel.bottomAnchor),
+            
+            deleteHabitButton.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            deleteHabitButton.heightAnchor.constraint(equalToConstant: 30),
+            deleteHabitButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -20)
+        ])
+    }
+    
+    private func setupCreateView() {
+        let safeArea = view.safeAreaLayoutGuide
+        
+        NSLayoutConstraint.activate([
+            
+            habitScrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            habitScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            habitScrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            habitScrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: habitScrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: habitScrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: habitScrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: habitScrollView.trailingAnchor),
+            
+            habitLabelView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            habitLabelView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 10),
+            habitLabelView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            habitLabelView.heightAnchor.constraint(equalToConstant: 20),
+            
+            habitTextField.topAnchor.constraint(equalTo: habitLabelView.bottomAnchor, constant: 10),
+            habitTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 10),
+            habitTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            habitTextField.heightAnchor.constraint(equalToConstant: 20),
+            
+            habitColorLabelView.topAnchor.constraint(equalTo: habitTextField.bottomAnchor, constant: 30),
+            habitColorLabelView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 10),
+            habitColorLabelView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            habitColorLabelView.heightAnchor.constraint(equalToConstant: 20),
+            
+            habitColorPreviewImage.topAnchor.constraint(equalTo: habitColorLabelView.bottomAnchor, constant: 10),
+            habitColorPreviewImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 10),
+            habitColorPreviewImage.heightAnchor.constraint(equalToConstant: 40),
+            habitColorPreviewImage.widthAnchor.constraint(equalToConstant: 40),
+            
+            habitTimeLabel.topAnchor.constraint(equalTo: habitColorPreviewImage.bottomAnchor, constant: 30),
+            habitTimeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 10),
+            habitTimeLabel.heightAnchor.constraint(equalToConstant: 20),
+            habitTimeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            
+            habitTimeSetLabel.topAnchor.constraint(equalTo: habitTimeLabel.bottomAnchor, constant: 10),
+            habitTimeSetLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 10),
+            habitTimeSetLabel.widthAnchor.constraint(equalToConstant: 100),
             habitTimeSetLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
             
             habitTimeSet.heightAnchor.constraint(equalToConstant: 30),
@@ -226,6 +306,26 @@ class HabitCreateEditView: UIViewController {
             habitTimeSet.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
             habitTimeSet.bottomAnchor.constraint(equalTo: habitTimeSetLabel.bottomAnchor),
         ])
+    }
+    
+    @objc func didPressDeleteButton() {
+        
+        let alert = UIAlertController(
+            title: "Delete",
+            message: "You want to delete" + habitLabel,
+            preferredStyle: .alert
+        )
+        
+        func consolePrint(action: UIAlertAction) {
+            print(action.title!)
+        }
+        
+        // Set couple alert Actions
+        alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: consolePrint))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: consolePrint))
+        
+        // Show Alert
+        self.present(alert, animated: true, completion: nil)
     }
     
     @objc func dateChanged(sender: UIDatePicker) {
@@ -274,7 +374,6 @@ class HabitCreateEditView: UIViewController {
         
     }
 }
-
 
 extension HabitCreateEditView: UIColorPickerViewControllerDelegate {
 

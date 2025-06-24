@@ -32,6 +32,7 @@ class HabitsViewController: UIViewController {
     
     private enum CellReuseID: String {
         case habit = "HabitsTableViewCell_ReuseID"
+        case progress = "ProgressTableViewCell_ReuseID"
     }
     
     private enum HeaderFooterReuseID: String {
@@ -95,7 +96,12 @@ class HabitsViewController: UIViewController {
         )
         
         habitsTableView.register(
-            TableSectionFooterHeaderView.self,
+            ProgressTableViewCell.self,
+            forCellReuseIdentifier: CellReuseID.progress.rawValue
+        )
+        
+        habitsTableView.register(
+            HabitsTableSectionFooterHeaderView.self,
             forHeaderFooterViewReuseIdentifier: HeaderFooterReuseID.base.rawValue
         )
         
@@ -116,9 +122,7 @@ extension HabitsViewController: UITableViewDataSource {
     func numberOfSections(
         in tableView: UITableView
     ) -> Int {
-        // MARK: CHANGE to 2 when PROGRESS BAR ADDED
-        1
-        // MARK: ----------------------------------------------------------------
+        2
     }
     
     // Define Number of cells in 1 section equal to the Amount of posts in postList
@@ -126,16 +130,12 @@ extension HabitsViewController: UITableViewDataSource {
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        
-        habitsList.count
-        
-        // MARK: ACTIVATE when PROGRESS BAR ADDED
-//        if section == 1 {
-//            return habitsList.count
-//        } else {
-//            return 1
-//        }
-        // MARK: ----------------------------------------------------------------
+         
+        if section == 1 {
+            return habitsList.count
+        } else {
+            return 1
+        }
     }
 
     // Add post to cell according to index(Path)
@@ -143,7 +143,6 @@ extension HabitsViewController: UITableViewDataSource {
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: CellReuseID.habit.rawValue,
             for: indexPath
@@ -154,29 +153,28 @@ extension HabitsViewController: UITableViewDataSource {
         cell.update(habitsList[indexPath.row])
         return cell
         
-// MARK: ACTIVATE when PROGRESS BAR ADDED
-//        if indexPath.section == 1
-//        {
-//            guard let cell = tableView.dequeueReusableCell(
-//                withIdentifier: CellReuseID.post.rawValue,
-//                for: indexPath
-//            ) as? PostTableViewCell else {
-//                fatalError("could not dequeueReusableCell")
-//            }
-//        
-//            cell.update(postList[indexPath.row])
-//            return cell
-//        } else {
-//            guard let cell = tableView.dequeueReusableCell(
-//                withIdentifier: CellReuseID.photo.rawValue,
-//                for: indexPath
-//            ) as? PhotosTableViewCell else {
-//                fatalError("could not dequeueReusableCell")
-//            }
-//            cell.update()
-//            return cell
-//        }
-// MARK: ----------------------------------------------------------------        
+
+        if indexPath.section == 1
+        {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: CellReuseID.habit.rawValue,
+                for: indexPath
+            ) as? HabitsTableViewCell else {
+                fatalError("could not dequeueReusableCell")
+            }
+        
+            cell.update(habitsList[indexPath.row])
+            return cell
+        } else {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: CellReuseID.progress.rawValue,
+                for: indexPath
+            ) as? ProgressTableViewCell else {
+                fatalError("could not dequeueReusableCell")
+            }
+            cell.update(habitsList[indexPath.row])
+            return cell
+        }
         
     }
 }
@@ -213,19 +211,14 @@ extension HabitsViewController: UITableViewDelegate {
 //            return UITableView.automaticDimension
 //        }
     }
-    
-    
-// MARK: ACTIVATE WHEN SETUP HABIT VIEW ADDED
-//
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        if indexPath.section == 0 {
-//            navigationController?.pushViewController(PhotosViewController(), animated: true)
-//        }
-//    }
-// MARK: ----------------------------------------------------------------
 
-    
-    // Set header as Profile Header View
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 {
+            navigationController?.pushViewController(HabitCreateEditView(status: .edit), animated: true)
+            navigationController?.navigationBar.isHidden = false
+        }
+    }
+
     func tableView(
         _ tableView: UITableView,
         viewForHeaderInSection section: Int
@@ -233,25 +226,23 @@ extension HabitsViewController: UITableViewDelegate {
         
         guard let headerView = tableView.dequeueReusableHeaderFooterView(
             withIdentifier: HeaderFooterReuseID.base.rawValue
-        ) as? TableSectionFooterHeaderView else {
+        ) as? HabitsTableSectionFooterHeaderView else {
             fatalError("could not dequeueReusableCell")
         }
         return headerView
     
-// MARK: ACTIVATE when PROGRESS BAR ADDED
-//        if section == 0 {
-//            guard let headerView = tableView.dequeueReusableHeaderFooterView(
-//                withIdentifier: HeaderFooterReuseID.base.rawValue
-//            ) as? TableSectionFooterHeaderView else {
-//                fatalError("could not dequeueReusableCell")
-//            }
-//
-//            return headerView
-//        
-//        } else {
-//            return UIView()
-//        }
-// MARK: ----------------------------------------------------------------
+
+        if section == 0 {
+            guard let headerView = tableView.dequeueReusableHeaderFooterView(
+                withIdentifier: HeaderFooterReuseID.base.rawValue
+            ) as? HabitsTableSectionFooterHeaderView else {
+                fatalError("could not dequeueReusableCell")
+            }
+            return headerView
+        
+        } else {
+            return UIView()
+        }
     
     }
     func tableView(
