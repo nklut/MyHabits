@@ -2,7 +2,7 @@ import UIKit
 
 class HabitsViewController: UIViewController {
     
-    // private lazy var habitsList: [habitListItem] = habitListItem.make()
+    private lazy var habitsList: [Habit] = HabitsStore.shared.habits
     
     private lazy var addHabitButton: UIButton = {
         let view = UIButton(type: .custom)
@@ -24,7 +24,7 @@ class HabitsViewController: UIViewController {
             style: .plain
         )
         view.separatorStyle = .none
-        view.backgroundColor = .systemGray5
+        view.backgroundColor = .mhGray
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -42,6 +42,7 @@ class HabitsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
+        
         setupView()
         addSubviews()
         setupSubviews()
@@ -50,6 +51,11 @@ class HabitsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if HabitsStore.shared.habits.isEmpty {
+            let sampleHabit = Habit(name: "Create your first Habit", date: Date.now, color: .mhBlue)
+            HabitsStore.shared.habits.append(sampleHabit)
+        }
         
         habitsTableView.indexPathsForSelectedRows?.forEach{ indexPath in
             habitsTableView.deselectRow(at: indexPath, animated: animated)
@@ -69,9 +75,8 @@ class HabitsViewController: UIViewController {
         let safeArea = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            
-            addHabitButton.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            addHabitButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
+            addHabitButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 30),
+            addHabitButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -30),
             addHabitButton.heightAnchor.constraint(equalToConstant: 22),
             addHabitButton.widthAnchor.constraint(equalToConstant: 18),
             
@@ -111,7 +116,8 @@ class HabitsViewController: UIViewController {
     }
     
     @objc private func didAddHabit() {
-        self.navigationController?.pushViewController(HabitCreateEditView(status: .create), animated: true)
+        let habitItem = Habit(name: "", date: Date.now, color: .mhBlue)
+        self.navigationController?.pushViewController(HabitCreateEditView(status: .create, habitItem: habitItem), animated: true)
         self.navigationController?.navigationBar.isHidden = false
     }
 }
@@ -125,7 +131,6 @@ extension HabitsViewController: UITableViewDataSource {
         2
     }
     
-    // Define Number of cells in 1 section equal to the Amount of posts in postList
     func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
@@ -133,11 +138,12 @@ extension HabitsViewController: UITableViewDataSource {
         return section == 1 ? habitsList.count : 1
     }
 
-    // Add post to cell according to index(Path)
+
     func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
+        
         if indexPath.section == 1
         {
             guard let cell = tableView.dequeueReusableCell(
@@ -150,6 +156,7 @@ extension HabitsViewController: UITableViewDataSource {
             cell.update(habitsList[indexPath.row])
             return cell
         } else {
+
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: CellReuseID.progress.rawValue,
                 for: indexPath
@@ -178,7 +185,7 @@ extension HabitsViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForFooterInSection section: Int
     ) -> CGFloat {
-        0
+        0.1
     }
     
     func tableView(
@@ -190,7 +197,7 @@ extension HabitsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 1 {
-            navigationController?.pushViewController(HabitDetailsViewController(), animated: true)
+            navigationController?.pushViewController(HabitDetailsViewController(habitsList[indexPath.row]), animated: true)
             navigationController?.navigationBar.isHidden = false
         }
     }

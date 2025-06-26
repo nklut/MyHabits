@@ -1,62 +1,27 @@
 import UIKit
 
-struct habitListItem {
-    let habitLabel: String
-    let habitDescription: String
-    let habitCounter: String
-    let HabitColor: UIColor
-}
 
-struct dateSinceInstall {
-    let currentDate: Date
-}
 
-extension habitListItem {
-    static func make() -> [habitListItem] {
-        [
-            habitListItem(
-                habitLabel: "Habit 1 Check This Line is long enough to cover 3 lines of text horrayh",
-                habitDescription: "Habit 1 description",
-                habitCounter: "Habit 1: 3",
-                HabitColor: .mhBlue),
-            habitListItem(
-                habitLabel: "Habit 2",
-                habitDescription: "Habit 2 description",
-                habitCounter: "Habit 2: 3",
-                HabitColor: .mhGreen),
-            habitListItem(
-                habitLabel: "Habit 3",
-                habitDescription: "Habit 3 description",
-                habitCounter: "Habit 3: 3",
-                HabitColor: .mhOrange),
-            habitListItem(
-                habitLabel: "Habit 4",
-                habitDescription: "Habit 4 description",
-                habitCounter: "Habit 4: 3",
-                HabitColor: .mhPurple),
-            habitListItem(
-                habitLabel: "Habit 5",
-                habitDescription: "Habit 5 description",
-                habitCounter: "Habit 5: 3",
-                HabitColor: .mhViolet),
-        ]
-    }
-    static func addHabit(item: habitListItem, list: [habitListItem]) -> [habitListItem] {
-        print("New habit item: ", item)
-        var newList: [habitListItem] = list
-        newList.append(item)
-        print("New habit List: ", newList)
-        return newList
-    }
-}
+// Lists
+//var _datesList = HabitsStore.shared.dates
+//var _habitsList = HabitsStore.shared.habits
+//var _todayProgress = HabitsStore.shared.todayProgress
 
-var habitsList: [habitListItem] = habitListItem.make()
+// Specific Habit
+//var _sampleHabit = _habitsList[0]
+//var _isDoneSampleHabit = HabitsStore.shared.habit(_sampleHabit, isTrackedIn: Date.now)
 
-//var habitsAllDates: [Date] = HabitsStore.shared.dates
+// Functions
+// HabitsStore.shared.save()
+// HabitsStore.shared.track(_sampleHabit)
+// HabitsStore.shared.trackDateString(forIndex: <#T##Int#>)
 
-var habitsAllDates: [Date] = [
-    Date.now,
-    Calendar.current.date(byAdding: .day, value: 1, to: Date.now)!,
-    Calendar.current.date(byAdding: .day, value: 2, to: Date.now)!,
-    Calendar.current.date(byAdding: .day, value: 3, to: Date.now)!,
-]
+
+// HabitsStore.shared.dates - Даты с момента установки прилохения
+// HabitsStore.shared.habits - список добавленыч привычек
+// HabitsStore.shared.todayProgress - 0..1 dlya tab bara
+// HabitsStore.shared.habit(<#T##habit: Habit##Habit#>, isTrackedIn: <#T##Date#>) true/false dlya galohki v spiske
+// HabitsStore.shared.save() - soxranqet privyhku
+// HabitsStore.shared.track(<#T##habit: Habit##Habit#>) - Добавляет текущую дату для хабит
+// HabitsStore.shared.trackDateString(forIndex: <#T##Int#>) - форматированная дата для таблицы дат
+

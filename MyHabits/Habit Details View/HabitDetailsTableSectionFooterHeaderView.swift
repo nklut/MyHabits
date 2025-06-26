@@ -1,21 +1,22 @@
 import UIKit
 
 class HabitDetailsTableSectionFooterHeaderView: UITableViewHeaderFooterView {
-    
+        
     private lazy var headerTitle: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         
-        view.text = "Activity"
+        view.text = "TODO"
         
         view.backgroundColor = .systemGray5
         view.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
-        view.textColor = .mhGray
+        view.textColor = .black
         
         return view
     }()
     
     override init(reuseIdentifier: String?) {
+        
         super.init(reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = .systemGray5
         addSubviews()
@@ -38,5 +39,11 @@ class HabitDetailsTableSectionFooterHeaderView: UITableViewHeaderFooterView {
             headerTitle.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
             headerTitle.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
         ])
+    }
+}
+
+extension HabitDetailsTableSectionFooterHeaderView {
+    func setHabitLabel(_ habitLabel: String) {
+        self.headerTitle.text = habitLabel
     }
 }

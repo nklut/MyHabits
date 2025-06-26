@@ -1,35 +1,21 @@
 import UIKit
 
 class HabitsTableViewCell: UITableViewCell {
-    
+        
     override init(
         style: UITableViewCell.CellStyle,
         reuseIdentifier: String?
     ) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-        
-        tuneView()
+
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder: not implemented")
     }
     
-    // Cell design setup
-    private func tuneView() {
-        backgroundColor = .tertiarySystemBackground
-        contentView.backgroundColor = .tertiarySystemBackground
-        textLabel?.backgroundColor = .clear
-        detailTextLabel?.backgroundColor = .clear
-        imageView?.backgroundColor = .clear
-        contentMode = .scaleAspectFit
-        accessoryType = .none
-    }
-    
-    func update(_ habitItem: habitListItem) {
-        
-        
-        
+    func update(_ habitItem: Habit) {
+
         lazy var taskLabel: UILabel = {
             let view = UILabel()
             view.translatesAutoresizingMaskIntoConstraints = false
@@ -37,8 +23,8 @@ class HabitsTableViewCell: UITableViewCell {
             view.lineBreakMode = .byWordWrapping
             view.numberOfLines = 2
             
-            view.text = habitItem.habitLabel
-            view.textColor = habitItem.HabitColor
+            view.text = habitItem.name
+            view.textColor = habitItem.color
             view.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
             
             return view
@@ -48,7 +34,7 @@ class HabitsTableViewCell: UITableViewCell {
             let view = UILabel()
             view.translatesAutoresizingMaskIntoConstraints = false
             
-            view.text = habitItem.habitDescription
+            view.text = habitItem.dateString
             view.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.regular)
             view.textColor = .systemGray2
             
@@ -57,9 +43,9 @@ class HabitsTableViewCell: UITableViewCell {
         
         lazy var taskCounter: UILabel = {
             let view = UILabel()
-            view.translatesAutoresizingMaskIntoConstraints = false
             
-            view.text = habitItem.habitCounter
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.text = "Count: " + String(habitItem.trackDates.count)
             view.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.semibold)
             view.textColor = .systemGray2
             
@@ -68,12 +54,13 @@ class HabitsTableViewCell: UITableViewCell {
         
         lazy var taskCheckBox: UIButton = {
             let view = UIButton(type: .custom)
+            
             view.translatesAutoresizingMaskIntoConstraints = false
             view.backgroundColor = .systemBackground
             view.clipsToBounds = true
             
-            let uncheckedImage = UIImage(systemName: "circle")?.withTintColor(habitItem.HabitColor, renderingMode: .alwaysOriginal)
-            let checkedImage = UIImage(systemName: "checkmark.circle")?.withTintColor(habitItem.HabitColor, renderingMode: .alwaysOriginal)
+            let uncheckedImage = UIImage(systemName: "circle")?.withTintColor(habitItem.color, renderingMode: .alwaysOriginal)
+            let checkedImage = UIImage(systemName: "checkmark.circle")?.withTintColor(habitItem.color, renderingMode: .alwaysOriginal)
 
             view.setImage(uncheckedImage, for: .normal)
             
@@ -124,12 +111,10 @@ class HabitsTableViewCell: UITableViewCell {
                 
                 taskDescription.topAnchor.constraint(equalTo: taskLabel.bottomAnchor, constant: 5),
                 taskDescription.leadingAnchor.constraint(equalTo: taskLabel.leadingAnchor),
-                taskDescription.heightAnchor.constraint(equalToConstant: 20),
                 taskDescription.trailingAnchor.constraint(equalTo: taskLabel.trailingAnchor),
                 
                 taskCounter.bottomAnchor.constraint(equalTo: habitViewContainer.bottomAnchor, constant: -20),
                 taskCounter.leadingAnchor.constraint(equalTo: taskLabel.leadingAnchor),
-                taskCounter.heightAnchor.constraint(equalToConstant: 20),
                 taskCounter.trailingAnchor.constraint(equalTo: taskDescription.trailingAnchor),
                 
                 taskCheckBox.centerYAnchor.constraint(equalTo: habitViewContainer.centerYAnchor),
@@ -146,9 +131,16 @@ class HabitsTableViewCell: UITableViewCell {
     
     @objc func isBoxChecked(sender: UIButton) {
         if sender.isSelected {
+
             sender.isSelected.toggle()
         } else {
             sender.isSelected.toggle()
+
         }
     }
 }
+
+
+//if !HabitsStore.shared.habit(habitItem, isTrackedIn: habitItem.date) {
+//    HabitsStore.shared.track(habitItem)
+//}

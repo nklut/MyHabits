@@ -2,6 +2,39 @@ import UIKit
 
 class HabitDetailsViewController: UIViewController {
     
+    private var habitItem: Habit
+    private var habitDates: [Date]
+    
+    init(_ habitItem: Habit) {
+        self.habitItem = habitItem
+        self.habitDates = habitItem.trackDates
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private var backButton: UIButton = {
+        let view = UIButton(type: .roundedRect)
+        
+        view.tintColor = .mhPurple
+        view.backgroundColor = .systemGray5
+        view.setTitle("Today", for: .normal)
+        
+        return view
+    }()
+    
+    private var editButton: UIButton = {
+        let view = UIButton(type: .roundedRect)
+        
+        view.tintColor = .mhPurple
+        view.backgroundColor = .systemGray5
+        view.setTitle("Edit", for: .normal)
+        
+        return view
+    }()
+    
     private lazy var habitDetailsTableView: UITableView = {
         let view = UITableView.init(
             frame: .zero,
@@ -24,6 +57,12 @@ class HabitDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
+        self.navigationItem.setLeftBarButton(UIBarButtonItem(customView: backButton), animated: true)
+        
+        editButton.addTarget(self, action: #selector(didTapEditButton), for: .touchUpInside)
+        self.navigationItem.setRightBarButton(UIBarButtonItem(customView: editButton), animated: true)
         
         setupView()
         addSubviews()
@@ -81,26 +120,33 @@ class HabitDetailsViewController: UIViewController {
         habitDetailsTableView.delegate = self
     }
     
+    @objc func didTapEditButton() {
+        navigationController?.pushViewController(HabitCreateEditView(status: .edit, habitItem: habitItem), animated: true)
+        navigationController?.navigationBar.isHidden = false
+    }
+    
+    @objc func didTapBackButton() {
+        navigationController?.pushViewController(HabitsViewController(), animated: true)
+        navigationController?.navigationBar.isHidden = true
+    }
+    
 }
 
 extension HabitDetailsViewController: UITableViewDataSource {
-    
-    // Define Number of Sections
+
     func numberOfSections(
         in tableView: UITableView
     ) -> Int {
         1
     }
-    
-    // Define Number of cells in 1 section equal to the Amount of posts in postList
+
     func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        habitsAllDates.count
+        habitDates.count
     }
 
-    // Add post to cell according to index(Path)
     func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
@@ -111,16 +157,15 @@ extension HabitDetailsViewController: UITableViewDataSource {
         ) as? HabitDetailsTableViewCell else {
             fatalError("could not dequeueReusableCell")
         }
-        cell.update(habitsAllDates[indexPath.row])
+        cell.update(habitDates[indexPath.row])
         return cell
         
     }
 }
 
-// Table delegate setup
 extension HabitDetailsViewController: UITableViewDelegate {
     
-    // Define header height
+
     func tableView(
         _ tableView: UITableView,
         heightForHeaderInSection section: Int
@@ -143,8 +188,10 @@ extension HabitDetailsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        navigationController?.pushViewController(HabitCreateEditView(status: .edit), animated: true)
-        navigationController?.navigationBar.isHidden = false
+        
+        // get date and habit object by selection
+        // add mark on selected cell
+
 
     }
 
@@ -157,6 +204,7 @@ extension HabitDetailsViewController: UITableViewDelegate {
         ) as? HabitDetailsTableSectionFooterHeaderView else {
             fatalError("could not dequeueReusableCell")
         }
+        headerView.setHabitLabel(habitItem.name)
         return headerView
     
     }
@@ -167,4 +215,3 @@ extension HabitDetailsViewController: UITableViewDelegate {
         return UIView()
     }
 }
-

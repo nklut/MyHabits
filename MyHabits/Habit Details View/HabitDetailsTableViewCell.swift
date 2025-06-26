@@ -1,7 +1,6 @@
 import UIKit
 
 class HabitDetailsTableViewCell: UITableViewCell {
-
     
     override init(
         style: UITableViewCell.CellStyle,
@@ -9,25 +8,14 @@ class HabitDetailsTableViewCell: UITableViewCell {
     ) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
-        //tuneView()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder: not implemented")
     }
     
-    // Cell design setup
-    private func tuneView() {
-        backgroundColor = .tertiarySystemBackground
-        contentView.backgroundColor = .tertiarySystemBackground
-        textLabel?.backgroundColor = .clear
-        detailTextLabel?.backgroundColor = .clear
-        imageView?.backgroundColor = .clear
-        contentMode = .scaleAspectFit
-        accessoryType = .none
-    }
-    
     func update(_ currentDate: Date) {
+        
         lazy var dateView: UILabel = {
             let view = UILabel()
             

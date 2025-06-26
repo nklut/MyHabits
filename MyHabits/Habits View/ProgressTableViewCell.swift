@@ -7,26 +7,14 @@ class ProgressTableViewCell: UITableViewCell {
         reuseIdentifier: String?
     ) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-        
-        tuneView()
+
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder: not implemented")
     }
     
-    // Cell design setup
-    private func tuneView() {
-        backgroundColor = .tertiarySystemBackground
-        contentView.backgroundColor = .tertiarySystemBackground
-        textLabel?.backgroundColor = .clear
-        detailTextLabel?.backgroundColor = .clear
-        imageView?.backgroundColor = .clear
-        contentMode = .scaleAspectFit
-        accessoryType = .none
-    }
-    
-    func update(_ habitItem: habitListItem) {
+    func update(_ habitItem: Habit) {
         
         lazy var progressLabelView: UILabel = {
             let view = UILabel()
@@ -44,8 +32,7 @@ class ProgressTableViewCell: UITableViewCell {
             let view = UILabel()
             
             view.translatesAutoresizingMaskIntoConstraints = false
-            view.text = "50%"
-            // view.text = habit_done_count_today / habit_total_count_today * 100 + "%"
+            view.text = String(Int(round(HabitsStore.shared.todayProgress * 100)))
             view.textColor = .systemGray2
             view.font = UIFont.systemFont(ofSize: 13, weight: .regular)
             
@@ -58,8 +45,7 @@ class ProgressTableViewCell: UITableViewCell {
             view.progressTintColor = .mhPurple
             view.progressViewStyle = .default
             view.trackTintColor = .systemGray5
-            
-            view.progress = 0.5 // habit_done_count_today / habit_total_count_today
+            view.progress = HabitsStore.shared.todayProgress
             
             return view
         }()
@@ -96,11 +82,9 @@ class ProgressTableViewCell: UITableViewCell {
                 
                 progressLabelView.topAnchor.constraint(equalTo: progressViewContainer.topAnchor, constant: 10),
                 progressLabelView.leadingAnchor.constraint(equalTo: progressViewContainer.leadingAnchor, constant: 10),
-                progressLabelView.heightAnchor.constraint(equalToConstant: 20),
                 progressLabelView.trailingAnchor.constraint(equalTo: progressViewContainer.trailingAnchor, constant: -150),
                 
                 progressPercentView.topAnchor.constraint(equalTo: progressLabelView.topAnchor),
-                progressPercentView.heightAnchor.constraint(equalToConstant: 20),
                 progressPercentView.trailingAnchor.constraint(equalTo: progressViewContainer.trailingAnchor, constant: -10),
                 
                 progressBarView.topAnchor.constraint(equalTo: progressLabelView.bottomAnchor, constant: 10),

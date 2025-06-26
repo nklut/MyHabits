@@ -4,14 +4,11 @@ class HabitsTableSectionFooterHeaderView: UITableViewHeaderFooterView {
     
     private lazy var headerTitle: UILabel = {
         let view = UILabel()
+        
         view.translatesAutoresizingMaskIntoConstraints = false
-        
-        // MARK: ADD Actual date choice
         view.text = "Today"
-        // MARK: ---------------------
-        
         view.backgroundColor = .systemGray5
-        view.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
+        view.font = UIFont.systemFont(ofSize: 30, weight: UIFont.Weight.semibold)
         view.textColor = .black
         
         return view

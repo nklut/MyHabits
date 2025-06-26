@@ -2,12 +2,17 @@ import UIKit
 
 class HabitCreateEditView: UIViewController {
     
-    var status: Status
-    var habitLabel: String = "Unknown Habit"
-    var habitColor: UIColor = .mhOrange
+    private var habitItem: Habit
+    private var status: Status
+    private var chosenDate: Date
+    private var chosenColor: UIColor
     
-    init(status: Status) {
+    init(status: Status, habitItem: Habit) {
         self.status = status
+        self.habitItem = habitItem
+        self.chosenDate = Date.now
+        self.chosenColor = habitItem.color
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -53,7 +58,7 @@ class HabitCreateEditView: UIViewController {
         let view = UILabel()
         
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.text = "Habit"
+        view.text = "Habit name"
         view.backgroundColor = .white
         view.textColor = .black
         view.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.regular)
@@ -67,6 +72,9 @@ class HabitCreateEditView: UIViewController {
         
         view.translatesAutoresizingMaskIntoConstraints = false
         view.placeholder = "Run 5 km, Sleep 8 hours, etc."
+        if status == .edit {
+            view.text = habitItem.name
+        }
         view.backgroundColor = .white
         view.textColor = .black
         view.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.regular)
@@ -93,7 +101,7 @@ class HabitCreateEditView: UIViewController {
         view.clipsToBounds = true
         view.layer.cornerRadius = 20
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .mhOrange
+        view.backgroundColor = chosenColor
         let tapRoot = UITapGestureRecognizer(
             target: self,
             action: #selector(didTapColorSelector)
@@ -121,7 +129,7 @@ class HabitCreateEditView: UIViewController {
         
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
-        view.text = "Every day at"
+        view.text = "Every day at "
         
         return view
         
@@ -162,21 +170,18 @@ class HabitCreateEditView: UIViewController {
         super.viewDidLoad()
         
         saveButton.addTarget(self, action: #selector(didPressSaveButton), for: .touchUpInside)
-        cancelButton.addTarget(self, action: #selector(didPressCancelButton), for: .touchUpInside)
         self.navigationItem.setRightBarButton(UIBarButtonItem(customView: saveButton), animated: true)
+       
+        cancelButton.addTarget(self, action: #selector(didPressCancelButton), for: .touchUpInside)
         self.navigationItem.setLeftBarButton(UIBarButtonItem(customView: cancelButton), animated: true)
-        
-        if status == .create {
-            title = "Create"
-        } else {
-            title = "Edit"
-        }
         
         view.backgroundColor = .systemGray5        
         addSubviews()
         if status == .create {
+            title = "Create"
             setupCreateView()
         } else {
+            title = "Edit"
             setupEditView()
         }
         
@@ -201,7 +206,6 @@ class HabitCreateEditView: UIViewController {
     }
     
     private func setupEditView() {
-        print("Setup Edit View")
         let safeArea = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
@@ -318,27 +322,42 @@ class HabitCreateEditView: UIViewController {
         
         let alert = UIAlertController(
             title: "Delete",
-            message: "You want to delete " + habitLabel + "?",
+            message: "You want to delete " + habitItem.name + "?",
             preferredStyle: .alert
         )
         
-        func consolePrint(action: UIAlertAction) {
-            print(action.title!)
+        func cancelHabitDeletion(action: UIAlertAction) {}
+        
+        func acceptHabitDeletion(action: UIAlertAction) {
+            
+            let ivc = HabitsViewController()
+            let store = HabitsStore.shared
+            var del_index: Int = -1
+            
+            for i in 0...store.habits.count-1 {
+                if habitItem.name == store.habits[i].name {
+                    del_index = i
+                }
+            }
+            if del_index != -1 {
+                store.habits.remove(at: del_index)
+            }
+            
+            self.tabBarController?.tabBar.backgroundColor = .systemGray5
+            self.navigationController?.pushViewController(ivc, animated: true)
+            
         }
         
-        // Set couple alert Actions
-        alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: consolePrint))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: consolePrint))
+        alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: acceptHabitDeletion))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: cancelHabitDeletion))
         
-        // Show Alert
         self.present(alert, animated: true, completion: nil)
     }
     
     @objc func dateChanged(sender: UIDatePicker) {
-        let components = Calendar.current.dateComponents([.hour, .minute], from: sender.date)
-        
-        print("Hour: ", components.hour ?? "unk_hours")
-        print("Minutes: ", components.minute ?? "unk_minutes")
+        //let components = Calendar.current.dateComponents([.hour, .minute], from: sender.date)
+        chosenDate = habitTimeSet.date
+        print("Habit item date: ", habitItem.date)
     }
     
     @objc func didTapColorSelector() {
@@ -354,30 +373,43 @@ class HabitCreateEditView: UIViewController {
     }
     
     @objc func habitLabelTextChanged() {
-        habitLabel = habitTextField.text!
+        habitItem.name = habitTextField.text!
     }
     
     @objc func didPressCancelButton() {
-        let ivc = HabitsViewController()
+        
+        let ivc: UIViewController
+        
+        if status == .create {
+            ivc = HabitsViewController()
+        } else {
+            ivc = HabitDetailsViewController(habitItem)
+        }
         self.tabBarController?.tabBar.backgroundColor = .systemGray5
         self.navigationController?.pushViewController(ivc, animated: true)
     }
     
     @objc func didPressSaveButton() {
+        
+        let newHabit = Habit(name: habitTextField.text!, date: chosenDate, color: chosenColor)
+        let store = HabitsStore.shared
         let ivc = HabitsViewController()
+        var change_index = -1
+        
+        for i in 0...store.habits.count - 1 {
+            if newHabit.name == store.habits[i].name {
+                change_index = i
+                store.habits[i].date = chosenDate
+                store.habits[i].color = chosenColor
+            }
+        }
+        
+        if change_index == -1 {
+            store.habits.append(newHabit)
+        }
+        
         self.tabBarController?.tabBar.backgroundColor = .systemGray5
-        
-        lazy var updatedList: [habitListItem] = habitListItem.addHabit(
-            item: habitListItem(
-                habitLabel: habitLabel,
-                habitDescription: "Habit 6 description",
-                habitCounter: "Habit 6: 3",
-                HabitColor: habitColor),
-            list: habitsList)
-        habitsList = updatedList
-        
         self.navigationController?.pushViewController(ivc, animated: true)
-        
     }
 }
 
@@ -385,7 +417,7 @@ extension HabitCreateEditView: UIColorPickerViewControllerDelegate {
 
     func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
         habitColorPreviewImage.backgroundColor = viewController.selectedColor
-        habitColor = viewController.selectedColor
+        chosenColor = viewController.selectedColor
     }
     
 }
