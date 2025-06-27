@@ -6,11 +6,11 @@ class HabitDetailsTableSectionFooterHeaderView: UITableViewHeaderFooterView {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         
-        view.text = "TODO"
+        view.text = "Dates of Activity"
         
         view.backgroundColor = .systemGray5
-        view.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
-        view.textColor = .black
+        view.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.bold)
+        view.textColor = .systemGray3
         
         return view
     }()
@@ -33,17 +33,11 @@ class HabitDetailsTableSectionFooterHeaderView: UITableViewHeaderFooterView {
     private func setupView(){
         let safeArea = contentView.safeAreaLayoutGuide
         
-        NSLayoutConstraint.activate([
-            headerTitle.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+        NSLayoutConstraint.activate([            
+            headerTitle.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
+            headerTitle.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -10),
             headerTitle.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -20),
             headerTitle.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
-            headerTitle.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
         ])
-    }
-}
-
-extension HabitDetailsTableSectionFooterHeaderView {
-    func setHabitLabel(_ habitLabel: String) {
-        self.headerTitle.text = habitLabel
     }
 }

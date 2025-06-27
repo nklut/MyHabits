@@ -1,7 +1,14 @@
+import UIKit
+
+enum Status {
+    case edit
+    case create
+}
+
+let sampleHabit = Habit(name: "Create your first Habit", date: Date.now, color: .mhBlue)
+
 let infoText =
 """
-Привычка за 21 день
-
 Прохождение этапов, за которые за 21 день вырабатывается привычка, подчиняется следующему алгоритму:
 
 1. Провести 1 день без обращения

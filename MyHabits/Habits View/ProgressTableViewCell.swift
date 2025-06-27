@@ -7,7 +7,6 @@ class ProgressTableViewCell: UITableViewCell {
         reuseIdentifier: String?
     ) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-
     }
     
     required init?(coder: NSCoder) {
@@ -16,6 +15,7 @@ class ProgressTableViewCell: UITableViewCell {
     
     func update(_ habitItem: Habit) {
         
+        // Habits List View Progress Bar Label
         lazy var progressLabelView: UILabel = {
             let view = UILabel()
             
@@ -28,16 +28,21 @@ class ProgressTableViewCell: UITableViewCell {
             return view
         }()
         
+        // Habits List View Progress Bar % of completition Label
         lazy var progressPercentView: UILabel = {
             let view = UILabel()
             
             view.translatesAutoresizingMaskIntoConstraints = false
-            view.text = String(Int(round(HabitsStore.shared.todayProgress * 100)))
             view.textColor = .systemGray2
             view.font = UIFont.systemFont(ofSize: 13, weight: .regular)
             
+            // Take shared variable from HabitsStore and adapt to % representation
+            view.text = String(Int(round(HabitsStore.shared.todayProgress * 100)))
+            
             return view
         }()
+        
+        // Habits List View Today's Progress Bar View
         lazy var progressBarView: UIProgressView = {
             let view = UIProgressView()
             
@@ -45,11 +50,14 @@ class ProgressTableViewCell: UITableViewCell {
             view.progressTintColor = .mhPurple
             view.progressViewStyle = .default
             view.trackTintColor = .systemGray5
+            
+            // Take shared variable from HabitsStore and sho as a Progress Bar fill level
             view.progress = HabitsStore.shared.todayProgress
             
             return view
         }()
         
+        // Container for subviews
         lazy var progressViewContainer: UIView = {
             let view = UIView()
             
@@ -65,16 +73,12 @@ class ProgressTableViewCell: UITableViewCell {
             progressViewContainer.addSubview(progressLabelView)
             progressViewContainer.addSubview(progressPercentView)
             progressViewContainer.addSubview(progressBarView)
- 
         }
-        
-        // Setup positions of views inside content view
+
         func setupConstraints() {
-            
             let safeArea = contentView.safeAreaLayoutGuide
             
             NSLayoutConstraint.activate([
-                
                 progressViewContainer.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 25),
                 progressViewContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
                 progressViewContainer.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -10),
@@ -95,7 +99,7 @@ class ProgressTableViewCell: UITableViewCell {
             ])
         }
         
-        contentView.backgroundColor = .mhGray
+        contentView.backgroundColor = .systemGray5
         addSubviews()
         setupConstraints()
         

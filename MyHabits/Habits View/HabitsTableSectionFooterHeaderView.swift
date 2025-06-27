@@ -7,7 +7,7 @@ class HabitsTableSectionFooterHeaderView: UITableViewHeaderFooterView {
         
         view.translatesAutoresizingMaskIntoConstraints = false
         view.text = "Today"
-        view.backgroundColor = .systemGray5
+        view.backgroundColor = .systemGray6
         view.font = UIFont.systemFont(ofSize: 30, weight: UIFont.Weight.semibold)
         view.textColor = .black
         
@@ -16,7 +16,7 @@ class HabitsTableSectionFooterHeaderView: UITableViewHeaderFooterView {
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = .systemGray5
+        contentView.backgroundColor = .systemGray6
         addSubviews()
         setupView()
     }

@@ -2,29 +2,31 @@ import UIKit
 
 class HabitsViewController: UIViewController {
     
+    // Lits of all Habits
     private lazy var habitsList: [Habit] = HabitsStore.shared.habits
     
+    // Button for adding new Habit
     private lazy var addHabitButton: UIButton = {
         let view = UIButton(type: .custom)
-        view.translatesAutoresizingMaskIntoConstraints = false
         
-        view.backgroundColor = .systemGray5
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemGray6
         view.setImage(UIImage(systemName: "plus"), for: .normal)
         view.tintColor = .mhPurple
-        
         view.addTarget(self, action: #selector(didAddHabit), for: .touchUpInside)
         
         return view
-        
     }()
     
+    // Table view for Habits
     private lazy var habitsTableView: UITableView = {
         let view = UITableView.init(
             frame: .zero,
             style: .plain
         )
+        
         view.separatorStyle = .none
-        view.backgroundColor = .mhGray
+        view.backgroundColor = .systemGray5
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -52,8 +54,8 @@ class HabitsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        // Adds Sample Habit if none habits in list. Also works at the very first launch of the app
         if HabitsStore.shared.habits.isEmpty {
-            let sampleHabit = Habit(name: "Create your first Habit", date: Date.now, color: .mhBlue)
             HabitsStore.shared.habits.append(sampleHabit)
         }
         
@@ -63,7 +65,7 @@ class HabitsViewController: UIViewController {
     }
     
     private func setupView() {
-        view.backgroundColor = .systemGray5
+        view.backgroundColor = .systemGray6
     }
     
     private func addSubviews() {
@@ -88,7 +90,6 @@ class HabitsViewController: UIViewController {
     }
     
     private func setupTableView() {
-        
         habitsTableView.rowHeight = UITableView.automaticDimension
         habitsTableView.estimatedRowHeight = 200
         if #available(iOS 15.0, *)  {
@@ -109,12 +110,12 @@ class HabitsViewController: UIViewController {
             HabitsTableSectionFooterHeaderView.self,
             forHeaderFooterViewReuseIdentifier: HeaderFooterReuseID.base.rawValue
         )
-        
-        // Init behaviour
+
         habitsTableView.dataSource = self
         habitsTableView.delegate = self
     }
     
+    // If button pressed open Create view controller
     @objc private func didAddHabit() {
         let habitItem = Habit(name: "", date: Date.now, color: .mhBlue)
         self.navigationController?.pushViewController(HabitCreateEditView(status: .create, habitItem: habitItem), animated: true)
@@ -123,8 +124,6 @@ class HabitsViewController: UIViewController {
 }
 
 extension HabitsViewController: UITableViewDataSource {
-    
-    // Define Number of Sections
     func numberOfSections(
         in tableView: UITableView
     ) -> Int {
@@ -137,13 +136,11 @@ extension HabitsViewController: UITableViewDataSource {
     ) -> Int {
         return section == 1 ? habitsList.count : 1
     }
-
-
+    
     func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        
         if indexPath.section == 1
         {
             guard let cell = tableView.dequeueReusableCell(
@@ -152,11 +149,10 @@ extension HabitsViewController: UITableViewDataSource {
             ) as? HabitsTableViewCell else {
                 fatalError("could not dequeueReusableCell")
             }
-        
             cell.update(habitsList[indexPath.row])
+            
             return cell
         } else {
-
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: CellReuseID.progress.rawValue,
                 for: indexPath
@@ -164,16 +160,13 @@ extension HabitsViewController: UITableViewDataSource {
                 fatalError("could not dequeueReusableCell")
             }
             cell.update(habitsList[indexPath.row])
+            
             return cell
         }
-        
     }
 }
 
-// Table delegate setup
 extension HabitsViewController: UITableViewDelegate {
-    
-    // Define header height
     func tableView(
         _ tableView: UITableView,
         heightForHeaderInSection section: Int
@@ -194,7 +187,8 @@ extension HabitsViewController: UITableViewDelegate {
     ) -> CGFloat {
         return indexPath.section == 1 ? 150 : UITableView.automaticDimension
     }
-
+    
+    // Open Details View controller when cell from Habit section is taped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 1 {
             navigationController?.pushViewController(HabitDetailsViewController(habitsList[indexPath.row]), animated: true)
@@ -208,7 +202,7 @@ extension HabitsViewController: UITableViewDelegate {
     ) -> UIView? {
         if section == 1 {
             let headerForSecondSection = UIView()
-            headerForSecondSection.backgroundColor = .mhGray
+            headerForSecondSection.backgroundColor = .systemGray5
             return headerForSecondSection
         } else {
             guard let headerView = tableView.dequeueReusableHeaderFooterView(
@@ -216,9 +210,9 @@ extension HabitsViewController: UITableViewDelegate {
             ) as? HabitsTableSectionFooterHeaderView else {
                 fatalError("could not dequeueReusableCell")
             }
+            
             return headerView
         }
-    
     }
     func tableView(
         _ tableView: UITableView,
