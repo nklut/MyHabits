@@ -310,7 +310,6 @@ class HabitCreateEditView: UIViewController {
             // Open Habits list view
             self.tabBarController?.tabBar.backgroundColor = .systemGray5
             self.navigationController?.pushViewController(ivc, animated: true)
-            
         }
         
         // Alert actions
@@ -359,32 +358,51 @@ class HabitCreateEditView: UIViewController {
     // Also deletes Template Habit if it is in list
     @objc func didPressSaveButton() {
         
-        let newHabit = Habit(name: newName, date: chosenDate, color: chosenColor)
-        let store = HabitsStore.shared
-        let ivc = HabitsViewController()
-        var change_index = -1
-        
-        // If new habit is in habits list - change only parameters of existing Habit
-        for i in 0...store.habits.count - 1 {
-            if newHabit.name == store.habits[i].name {
-                change_index = i
-                store.habits[i].date = chosenDate
-                store.habits[i].color = chosenColor
+        if newName.isEmpty {
+            
+            let alert = UIAlertController(
+                title: "Empty habit name",
+                message: "You need to give a name to your habit. For example: Run 5km, sleep 8 hours, etc.",
+                preferredStyle: .alert
+            )
+            
+            // Nothing on Cancel
+            func noHabitNameAlert(action: UIAlertAction) {}
+            
+            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: noHabitNameAlert))
+            self.present(alert, animated: true, completion: nil)
+            
+            
+        } else {
+            let newHabit = Habit(name: newName, date: chosenDate, color: chosenColor)
+            let store = HabitsStore.shared
+            let ivc = HabitsViewController()
+            var change_index = -1
+            
+            // If new habit is in habits list - change only parameters of existing Habit
+            for i in 0...store.habits.count - 1 {
+                if newHabit.name == store.habits[i].name {
+                    change_index = i
+                    store.habits[i].date = chosenDate
+                    store.habits[i].color = chosenColor
+                }
             }
-        }
-        // If new habit is not in habits list - append new Habit to Habits list
-        if change_index == -1 {
-            store.habits.append(newHabit)
+            // If new habit is not in habits list - append new Habit to Habits list
+            if change_index == -1 {
+                store.habits.append(newHabit)
+            }
+            
+            // Delete sample habit(its always at position 0)
+            if store.habits[0].name == sampleHabit.name {
+                store.habits.remove(at: 0)
+            }
+            
+            // Open Habits view on press
+            self.tabBarController?.tabBar.backgroundColor = .systemGray5
+            self.navigationController?.pushViewController(ivc, animated: true)
         }
         
-        // Delete sample habit(its always at position 0)
-        if store.habits[0].name == sampleHabit.name {
-            store.habits.remove(at: 0)
-        }
         
-        // Open Habits view on press
-        self.tabBarController?.tabBar.backgroundColor = .systemGray5
-        self.navigationController?.pushViewController(ivc, animated: true)
     }
 }
 

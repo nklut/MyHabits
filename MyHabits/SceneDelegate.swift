@@ -13,13 +13,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let habitsNavigationController = UINavigationController()
         habitsNavigationController.tabBarItem.title = "Habits"
         habitsNavigationController.tabBarItem.image = UIImage(systemName: "list.bullet")
-        habitsNavigationController.viewControllers = [HabitsViewController()]        
-        
+        habitsNavigationController.viewControllers = [HabitsViewController()]
+            
         // Profile Nav Controller Setup
         let infoNavigationController = UINavigationController()
         infoNavigationController.tabBarItem.title = "Info"
         infoNavigationController.tabBarItem.image = UIImage(systemName: "info.circle.fill")
         infoNavigationController.viewControllers = [InfoViewController()]
+        infoNavigationController.viewControllers = [_sampleView()]
         
         // Tab bar Controller Setup
         let tabBarController = UITabBarController()

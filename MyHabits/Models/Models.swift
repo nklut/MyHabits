@@ -7,6 +7,10 @@ enum Status {
 
 let sampleHabit = Habit(name: "Create your first Habit", date: Date.now, color: .mhBlue)
 
+protocol HabitTableViewBarUpdate: AnyObject {
+    func reloadTableViewData()
+}
+
 let infoText =
 """
 Прохождение этапов, за которые за 21 день вырабатывается привычка, подчиняется следующему алгоритму:

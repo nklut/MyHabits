@@ -1,6 +1,6 @@
 import UIKit
 
-class HabitsViewController: UIViewController {
+class HabitsViewController: UIViewController, HabitTableViewBarUpdate {
     
     // Lits of all Habits
     private lazy var habitsList: [Habit] = HabitsStore.shared.habits
@@ -20,10 +20,7 @@ class HabitsViewController: UIViewController {
     
     // Table view for Habits
     private lazy var habitsTableView: UITableView = {
-        let view = UITableView.init(
-            frame: .zero,
-            style: .plain
-        )
+        let view = UITableView.init(frame: .zero, style: .plain)
         
         view.separatorStyle = .none
         view.backgroundColor = .systemGray5
@@ -61,6 +58,15 @@ class HabitsViewController: UIViewController {
         
         habitsTableView.indexPathsForSelectedRows?.forEach{ indexPath in
             habitsTableView.deselectRow(at: indexPath, animated: animated)
+        }
+    }
+    
+    func reloadTableViewData() {
+        
+        
+        
+        DispatchQueue.main.async {
+            self.habitsTableView.reloadData()
         }
     }
     
@@ -124,33 +130,25 @@ class HabitsViewController: UIViewController {
 }
 
 extension HabitsViewController: UITableViewDataSource {
-    func numberOfSections(
-        in tableView: UITableView
-    ) -> Int {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
         2
     }
     
-    func tableView(
-        _ tableView: UITableView,
-        numberOfRowsInSection section: Int
-    ) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return section == 1 ? habitsList.count : 1
     }
     
-    func tableView(
-        _ tableView: UITableView,
-        cellForRowAt indexPath: IndexPath
-    ) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 1
         {
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: CellReuseID.habit.rawValue,
-                for: indexPath
-            ) as? HabitsTableViewCell else {
+                for: indexPath) as? HabitsTableViewCell else {
                 fatalError("could not dequeueReusableCell")
             }
+            cell.delegate = self
             cell.update(habitsList[indexPath.row])
-            
             return cell
         } else {
             guard let cell = tableView.dequeueReusableCell(
@@ -159,32 +157,24 @@ extension HabitsViewController: UITableViewDataSource {
             ) as? ProgressTableViewCell else {
                 fatalError("could not dequeueReusableCell")
             }
-            cell.update(habitsList[indexPath.row])
             
+            cell.update(habitsList[indexPath.row])
             return cell
         }
     }
 }
 
 extension HabitsViewController: UITableViewDelegate {
-    func tableView(
-        _ tableView: UITableView,
-        heightForHeaderInSection section: Int
-    ) -> CGFloat {
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return section == 1 ? 5 : UITableView.automaticDimension
     }
     
-    func tableView(
-        _ tableView: UITableView,
-        heightForFooterInSection section: Int
-    ) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         0.1
     }
     
-    func tableView(
-        _ tableView: UITableView,
-        heightForRowAt indexPath: IndexPath
-    ) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return indexPath.section == 1 ? 150 : UITableView.automaticDimension
     }
     
@@ -196,10 +186,7 @@ extension HabitsViewController: UITableViewDelegate {
         }
     }
 
-    func tableView(
-        _ tableView: UITableView,
-        viewForHeaderInSection section: Int
-    ) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 1 {
             let headerForSecondSection = UIView()
             headerForSecondSection.backgroundColor = .systemGray5
@@ -214,10 +201,8 @@ extension HabitsViewController: UITableViewDelegate {
             return headerView
         }
     }
-    func tableView(
-        _ tableView: UITableView,
-        viewForFooterInSection section: Int
-    ) -> UIView? {
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
     }
 }

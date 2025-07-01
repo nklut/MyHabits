@@ -1,6 +1,8 @@
 import UIKit
 
 class HabitsTableViewCell: UITableViewCell {
+    
+    weak var delegate: HabitTableViewBarUpdate?
         
     override init(
         style: UITableViewCell.CellStyle,
@@ -12,7 +14,7 @@ class HabitsTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder: not implemented")
     }
-    
+
     func update(_ habitItem: Habit) {
         
         // Main Habit item view

@@ -14,7 +14,7 @@ class ProgressTableViewCell: UITableViewCell {
     }
     
     func update(_ habitItem: Habit) {
-        
+
         // Habits List View Progress Bar Label
         lazy var progressLabelView: UILabel = {
             let view = UILabel()

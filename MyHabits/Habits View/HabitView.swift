@@ -3,7 +3,8 @@ import UIKit
 class HabitView: UIView {
     // Main view for single habit element
     // Takes Habit instance shared data as information source for subviews
-
+    
+    weak var delegateBarUpdate: HabitTableViewBarUpdate?
     var habitItem: Habit
     let uncheckedImage: UIImage
     let checkedImage: UIImage
@@ -142,6 +143,9 @@ class HabitView: UIView {
             if !store.habits[habit_index].isAlreadyTakenToday {
                 // If habbit not yet tracked: Track habbit
                 store.track(habitItem)
+                
+                // Update Today's Habit completition Bar
+                delegateBarUpdate?.reloadTableViewData()
             } else {
                 // If habbit tracked: fixate the checkbox marked
                 button.setImage(checkedImage, for: .normal)
@@ -154,6 +158,7 @@ class HabitView: UIView {
     
     // Toggles the checkbox
     @objc func isBoxChecked(sender: UIButton) {
+        
         sender.isSelected ? sender.setImage(checkedImage, for: .normal) : habitCheckBoxTapped(sender)
         sender.isSelected.toggle()
     }
